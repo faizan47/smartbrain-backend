@@ -1,4 +1,4 @@
-require('dotenv').config(); // only needed to imported environment variables
+require('dotenv').config(); // only needed to import environment variables
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
