@@ -1,11 +1,13 @@
+require('dotenv').config(); // only needed to imported environment variables
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const knex = require('knex')({
 	client: 'pg',
-	connection: 'postgres://faizan:faizan@localhost:5432/smartbrain'
+	connection: `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:5432/smartbrain`
 });
 
+console.log(process.env.DB_HOST);
 app.use(bodyParser.json());
 
 app.post('/', async (req, res) => {
