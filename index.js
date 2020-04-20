@@ -50,7 +50,7 @@ app.post('/signin', async (req, res) => {
 		const isVerified = await passwordCheck(password, storedPassword);
 		if (isVerified) {
 			req.session.userId = userId;
-			res.status(200).json('Success!');
+			res.status(200).json(row);
 		} else {
 			res.status(404).json('Sorry, incorrect password.');
 		}
@@ -59,18 +59,22 @@ app.post('/signin', async (req, res) => {
 	}
 });
 
-app.post('/update-score', isLoggedIn, async (req, res) => {
-	const { userId } = req.session;
-	let score = req.body.score;
-	await knex('users').increment('score', score).where({ id: userId });
-	res.send('Score updated');
+app.post('/update-score', async (req, res) => {
+	const { score, id } = req.body;
+	try {
+		await knex('users').increment('score', score).where({ id });
+		res.status(200).json('Score updated');
+	} catch (error) {
+		res.status(404).send('Something went wrong!', error);
+	}
 });
-app.post('/signout', isLoggedIn, async (req, res) => {
+
+app.post('/signout', async (req, res) => {
 	try {
 		req.session.userId = null;
 		res.status(200).json('You have been signed out!');
 	} catch (error) {
-		res.status(404).json(error);
+		res.status(404).json({ error });
 	}
 });
 
